@@ -33,7 +33,15 @@ new class extends Component
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('flights.index')" :active="request()->routeIs('flights.*')" wire:navigate>
+                        {{ __('Voos') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('reservations.index')" :active="request()->routeIs('reservations.*')" wire:navigate>
+                        {{ __('Reservas') }}
+                    </x-nav-link>
                 </div>
+
+                
             </div>
 
             <!-- Settings Dropdown -->
