@@ -23,4 +23,9 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('flights', App\Http\Controllers\FlightController::class);
+    Route::resource('reservations', App\Http\Controllers\ReservationController::class);
+});
+
 require __DIR__.'/auth.php';
