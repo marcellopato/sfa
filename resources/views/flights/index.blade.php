@@ -20,7 +20,9 @@
                 <a href="{{ route('flights.index') }}" class="ml-2 text-gray-600 hover:underline">Limpar</a>
             </div>
         </form>
+        @role('admin')
         <a href="{{ route('flights.create') }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded mb-4 hover:bg-blue-700">Novo Voo</a>
+        @endrole
         <div class="overflow-x-auto bg-white rounded shadow">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
@@ -56,7 +58,7 @@
                                     ];
                                 @endphp
                                 <span class="px-2 py-1 rounded text-xs font-semibold {{ $statusColors[$flight->status] ?? 'bg-gray-100 text-gray-800' }}">
-                                    {{ __(ucfirst($flight->status)) }}
+                                    {{ ucfirst($flight->status) }}
                                 </span>
                             </td>
                             <td class="px-4 py-2">R$ {{ number_format($flight->price, 2, ',', '.') }}</td>
@@ -64,6 +66,7 @@
                                 <a href="{{ route('flights.show', $flight) }}" class="text-blue-600 hover:text-blue-800" title="Ver">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                 </a>
+                                @role('admin')
                                 <a href="{{ route('flights.edit', $flight) }}" class="text-yellow-600 hover:text-yellow-800" title="Editar">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13h3l8-8a2.828 2.828 0 10-4-4l-8 8v3z" /></svg>
                                 </a>
@@ -74,6 +77,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                                     </button>
                                 </form>
+                                @endrole
                             </td>
                         </tr>
                     @endforeach
