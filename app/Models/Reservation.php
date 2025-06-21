@@ -12,9 +12,20 @@ class Reservation extends Model
     protected $fillable = [
         'user_id',
         'flight_id',
-        'passengers',
+        'reservation_code',
+        'reservation_date',
         'status',
         'total_price',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'reservation_date' => 'datetime',
+        'total_price' => 'float',
     ];
 
     public function user()

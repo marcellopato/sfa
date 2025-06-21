@@ -20,10 +20,16 @@ class Flight extends Model
         'status',
     ];
 
-    public function flight()
-    {
-        return $this->belongsTo(\App\Models\Flight::class);
-    }
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'departure_time' => 'datetime',
+        'arrival_time' => 'datetime',
+        'price' => 'float',
+    ];
 
     public function reservations()
     {

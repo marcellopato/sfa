@@ -19,33 +19,35 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->can('view all reservations')) {
-            $query = Reservation::with(['user', 'flight']);
+        $query = Reservation::with(['user', 'flight']);
 
-            // Busca por código do voo, nome do usuário
-            if ($request->filled('search')) {
-                $search = $request->input('search');
-                $query->whereHas('flight', function($q) use ($search) {
-                    $q->where('code', 'like', "%$search%")
-                      ->orWhere('origin', 'like', "%$search%")
-                      ->orWhere('destination', 'like', "%$search%")
-                      ->orWhere('aircraft', 'like', "%$search%") ;
-                })->orWhereHas('user', function($q) use ($search) {
-                    $q->where('name', 'like', "%$search%")
-                      ->orWhere('email', 'like', "%$search%") ;
-                });
-            }
-
-            // Filtro por status
-            if ($request->filled('status')) {
-                $query->where('status', $request->input('status'));
-            }
-
-            $reservations = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
-            return view('reservations.index', compact('reservations'));
-        } else {
-            // ... (lógica usuário: só ver as próprias reservas)
+        if (!$request->user()->hasRole('admin')) {
+            $query->where('user_id', $request->user()->id);
         }
+        
+        // Busca por código do voo, nome do usuário
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('reservation_code', 'like', "%$search%")
+                  ->orWhereHas('flight', function($subq) use ($search) {
+                    $subq->where('code', 'like', "%$search%")
+                         ->orWhere('origin', 'like', "%$search%")
+                         ->orWhere('destination', 'like', "%$search%");
+                })->orWhereHas('user', function($subq) use ($search) {
+                    $subq->where('name', 'like', "%$search%")
+                         ->orWhere('email', 'like', "%$search%");
+                });
+            });
+        }
+
+        // Filtro por status
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        $reservations = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
+        return view('reservations.index', compact('reservations'));
     }
 
     /**
@@ -63,13 +65,20 @@ class ReservationController extends Controller
     {
         $data = $request->validate([
             'flight_id' => 'required|exists:flights,id',
-            'passengers' => 'required|integer|min:1',
-            'status' => 'required|in:pending,confirmed,cancelled',
-            'total_price' => 'required|numeric',
         ]);
-        $data['user_id'] = auth()->id();
-        Reservation::create($data);
-        return redirect()->route('reservations.index');
+        
+        $flight = Flight::findOrFail($data['flight_id']);
+
+        Reservation::create([
+            'user_id' => auth()->id(),
+            'flight_id' => $flight->id,
+            'reservation_code' => 'SFA-' . strtoupper(\Illuminate\Support\Str::random(8)),
+            'reservation_date' => now(),
+            'status' => 'confirmed',
+            'total_price' => $flight->price,
+        ]);
+
+        return redirect()->route('reservations.index')->with('success', 'Reserva criada com sucesso!');
     }
 
     /**
@@ -97,13 +106,10 @@ class ReservationController extends Controller
     {
         $reservation = Reservation::findOrFail($id);
         $data = $request->validate([
-            'flight_id' => 'required|exists:flights,id',
-            'passengers' => 'required|integer|min:1',
             'status' => 'required|in:pending,confirmed,cancelled',
-            'total_price' => 'required|numeric',
         ]);
         $reservation->update($data);
-        return redirect()->route('reservations.index');
+        return redirect()->route('reservations.index')->with('success', 'Reserva atualizada com sucesso!');
     }
 
     /**
