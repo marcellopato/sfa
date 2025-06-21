@@ -24,4 +24,9 @@ class Flight extends Model
     {
         return $this->belongsTo(\App\Models\Flight::class);
     }
+
+    public function reservations()
+    {
+        return $this->hasMany(\App\Models\Reservation::class);
+    }
 }
