@@ -32,8 +32,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('reports', [App\Http\Controllers\ReportsController::class, 'index'])->name('reports');
-    Route::get('users', \App\Livewire\Admin\UsersManagement::class)->name('users');
+    Route::get('/reports', [App\Http\Controllers\ReportsController::class, 'index'])->name('reports');
+    Route::get('/reports/export', [App\Http\Controllers\ReportsController::class, 'export'])->name('reports.export');
+    Route::get('/users', \App\Livewire\Admin\UsersManagement::class)->name('users');
 });
 
 require __DIR__.'/auth.php';

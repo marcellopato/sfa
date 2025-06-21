@@ -7,6 +7,8 @@ use App\Models\Flight;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Exports\ReportsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportsController extends Controller
 {
@@ -60,5 +62,10 @@ class ReportsController extends Controller
             'reservationsByDay',
             'topUsers'
         ));
+    }
+
+    public function export()
+    {
+        return Excel::download(new ReportsExport, 'sfa-reports.csv');
     }
 } 
