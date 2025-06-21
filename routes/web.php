@@ -26,6 +26,7 @@ Route::view('profile', 'profile')
 Route::middleware(['auth'])->group(function () {
     Route::resource('flights', App\Http\Controllers\FlightController::class);
     Route::resource('reservations', App\Http\Controllers\ReservationController::class);
+    Route::get('admin/reports', [App\Http\Controllers\ReportsController::class, 'index'])->name('admin.reports');
 });
 
 require __DIR__.'/auth.php';

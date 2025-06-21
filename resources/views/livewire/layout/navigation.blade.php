@@ -39,6 +39,9 @@ new class extends Component
                     <x-nav-link :href="route('reservations.index')" :active="request()->routeIs('reservations.*')" wire:navigate>
                         {{ __('Reservas') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.reports')" :active="request()->routeIs('admin.reports')" wire:navigate>
+                        {{ __('Relatórios') }}
+                    </x-nav-link>
                 </div>
 
                 
