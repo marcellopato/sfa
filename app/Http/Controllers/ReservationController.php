@@ -8,34 +8,44 @@ use App\Models\Flight;
 
 class ReservationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:edit reservations')->only(['edit', 'update']);
+        $this->middleware('permission:delete reservations')->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $query = Reservation::with(['user', 'flight']);
+        if ($request->user()->can('view all reservations')) {
+            $query = Reservation::with(['user', 'flight']);
 
-        // Busca por código do voo, nome do usuário
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->whereHas('flight', function($q) use ($search) {
-                $q->where('code', 'like', "%$search%")
-                  ->orWhere('origin', 'like', "%$search%")
-                  ->orWhere('destination', 'like', "%$search%")
-                  ->orWhere('aircraft', 'like', "%$search%") ;
-            })->orWhereHas('user', function($q) use ($search) {
-                $q->where('name', 'like', "%$search%")
-                  ->orWhere('email', 'like', "%$search%") ;
-            });
+            // Busca por código do voo, nome do usuário
+            if ($request->filled('search')) {
+                $search = $request->input('search');
+                $query->whereHas('flight', function($q) use ($search) {
+                    $q->where('code', 'like', "%$search%")
+                      ->orWhere('origin', 'like', "%$search%")
+                      ->orWhere('destination', 'like', "%$search%")
+                      ->orWhere('aircraft', 'like', "%$search%") ;
+                })->orWhereHas('user', function($q) use ($search) {
+                    $q->where('name', 'like', "%$search%")
+                      ->orWhere('email', 'like', "%$search%") ;
+                });
+            }
+
+            // Filtro por status
+            if ($request->filled('status')) {
+                $query->where('status', $request->input('status'));
+            }
+
+            $reservations = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
+            return view('reservations.index', compact('reservations'));
+        } else {
+            // ... (lógica usuário: só ver as próprias reservas)
         }
-
-        // Filtro por status
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
-        }
-
-        $reservations = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
-        return view('reservations.index', compact('reservations'));
     }
 
     /**
