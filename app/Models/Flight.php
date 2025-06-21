@@ -19,4 +19,9 @@ class Flight extends Model
         'aircraft',
         'status',
     ];
+
+    public function flight()
+    {
+        return $this->belongsTo(\App\Models\Flight::class);
+    }
 }
