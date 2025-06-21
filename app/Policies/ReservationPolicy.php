@@ -14,11 +14,13 @@ class ReservationPolicy
      * @param  \App\Models\User  $user
      * @return void|bool
      */
-    public function before(User $user)
+    public function before(User $user, string $ability): bool|null
     {
         if ($user->hasRole('admin')) {
             return true;
         }
+
+        return null;
     }
 
     /**
@@ -52,8 +54,7 @@ class ReservationPolicy
      */
     public function update(User $user, Reservation $reservation): bool
     {
-        // Apenas admins podem atualizar, tratado pelo método before()
-        return false;
+        return $user->id === $reservation->user_id;
     }
 
     /**
@@ -61,8 +62,7 @@ class ReservationPolicy
      */
     public function delete(User $user, Reservation $reservation): bool
     {
-        // Apenas admins podem deletar, tratado pelo método before()
-        return false;
+        return $user->id === $reservation->user_id;
     }
 
     /**

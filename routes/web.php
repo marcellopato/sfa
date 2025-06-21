@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FlightController;
+use App\Http\Controllers\ReservationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,18 +25,14 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::middleware(['auth'])->group(function () {
-    Route::resource('flights', App\Http\Controllers\FlightController::class);
-    Route::resource('reservations', App\Http\Controllers\ReservationController::class);
-    Route::get('admin/reports', [App\Http\Controllers\ReportsController::class, 'index'])
-        ->middleware('role:admin')
-        ->name('admin.reports');
-});
+Route::resource('flights', FlightController::class);
 
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/reports', [App\Http\Controllers\ReportsController::class, 'index'])->name('reports');
-    Route::get('/reports/export', [App\Http\Controllers\ReportsController::class, 'export'])->name('reports.export');
-    Route::get('/users', \App\Livewire\Admin\UsersManagement::class)->name('users');
-});
+Route::resource('flights.reservations', ReservationController::class)
+    ->only(['create', 'store'])
+    ->middleware('auth');
+    
+Route::resource('reservations', ReservationController::class)
+    ->only(['index', 'show', 'edit', 'update', 'destroy'])
+    ->middleware('auth');
 
 require __DIR__.'/auth.php';

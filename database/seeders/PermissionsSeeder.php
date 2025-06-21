@@ -14,11 +14,18 @@ class PermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        Permission::firstOrCreate(['name' => 'edit reservations']);
-        Permission::firstOrCreate(['name' => 'delete reservations']);
-        Permission::firstOrCreate(['name' => 'view all reservations']);
+        // Reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $adminRole = Role::where('name', 'admin')->first();
-        $adminRole->givePermissionTo(['edit reservations', 'delete reservations', 'view all reservations']);
+        // create permissions
+        Permission::firstOrCreate(['name' => 'manage users']);
+        Permission::firstOrCreate(['name' => 'view reports']);
+        Permission::firstOrCreate(['name' => 'export reports']);
+
+        // create roles and assign existing permissions
+        $userRole = Role::firstOrCreate(['name' => 'user']);
+
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $adminRole->givePermissionTo(Permission::all());
     }
 }

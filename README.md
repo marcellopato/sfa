@@ -87,6 +87,97 @@ A API do projeto é documentada utilizando Swagger (OpenAPI). Para acessar a doc
     - Na janela que abrir, cole o token no formato `Bearer <seu_token_aqui>`.
     - Agora você pode testar todos os endpoints protegidos da API.
 
+## Testes
+
+Para garantir a qualidade e a estabilidade da aplicação, foram implementados testes automatizados que cobrem as principais funcionalidades do sistema.
+
+### Rodando os Testes
+
+Para executar todos os testes da aplicação, utilize o seguinte comando na raiz do projeto:
+
+```bash
+./vendor/bin/sail artisan test
+```
+
+Para executar um arquivo de teste específico:
+
+```bash
+# Exemplo para o teste de gerenciamento de voos
+./vendor/bin/sail artisan test tests/Feature/FlightManagementTest.php
+```
+
+### Resultados dos Testes
+
+Abaixo estão os resultados da última execução de toda a suíte de testes, confirmando que todos os componentes da aplicação estão funcionando como esperado.
+
+```
+# php artisan test
+
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true
+
+   PASS  Tests\Feature\Auth\AuthenticationTest
+  ✓ login screen can be rendered
+  ✓ users can authenticate using the login screen
+  ✓ users can not authenticate with invalid password
+  ✓ navigation menu can be rendered
+  ✓ users can logout
+
+   PASS  Tests\Feature\Auth\EmailVerificationTest
+  ✓ email verification screen can be rendered
+  ✓ email can be verified
+  ✓ email is not verified with invalid hash
+
+   PASS  Tests\Feature\Auth\PasswordConfirmationTest
+  ✓ confirm password screen can be rendered
+  ✓ password can be confirmed
+  ✓ password is not confirmed with invalid password
+
+   PASS  Tests\Feature\Auth\PasswordResetTest
+  ✓ reset password link screen can be rendered
+  ✓ reset password link can be requested
+  ✓ reset password screen can be rendered
+  ✓ password can be reset with valid token
+
+   PASS  Tests\Feature\Auth\PasswordUpdateTest
+  ✓ password can be updated
+  ✓ correct password must be provided to update password
+
+   PASS  Tests\Feature\Auth\RegistrationTest
+  ✓ registration screen can be rendered
+  ✓ new users can register
+
+   PASS  Tests\Feature\ExampleTest
+  ✓ the application returns a successful response
+
+   PASS  Tests\Feature\Feature\FlightManagementTest
+  ✓ example
+
+   PASS  Tests\Feature\FlightManagementTest
+  ✓ guests cannot manage flights
+  ✓ regular users can view flights but cannot manage them
+  ✓ admin can create a flight
+  ✓ admin can update a flight
+  ✓ admin can delete a flight
+  ✓ flight creation requires valid data
+  ✓ list flights can be filtered
+
+   PASS  Tests\Feature\ProfileTest
+  ✓ profile page is displayed
+  ✓ profile information can be updated
+  ✓ email verification status is unchanged when the email address is unchanged
+  ✓ user can delete their account
+  ✓ correct password must be provided to delete account
+
+   PASS  Tests\Feature\ReservationManagementTest
+  ✓ guests cannot manage reservations
+  ✓ user can create and view their own reservations
+  ✓ user cannot view other users reservations
+  ✓ user cannot create reservation for another user
+  ✓ admin can view all reservations
+  ✓ reservation requires a valid flight
+
+  Tests:    40 passed (131 assertions)
 
 ## License
 
