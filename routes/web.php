@@ -26,6 +26,13 @@ Route::view('profile', 'profile')
     ->name('profile');
 
 Route::resource('flights', FlightController::class);
-Route::resource('reservations', ReservationController::class)->middleware('auth');
+
+Route::resource('flights.reservations', ReservationController::class)
+    ->only(['create', 'store'])
+    ->middleware('auth');
+    
+Route::resource('reservations', ReservationController::class)
+    ->only(['index', 'show', 'edit', 'update', 'destroy'])
+    ->middleware('auth');
 
 require __DIR__.'/auth.php';

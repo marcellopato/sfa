@@ -53,21 +53,18 @@ class ReservationController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Flight $flight)
     {
-        return view('reservations.create');
+        return view('reservations.create', compact('flight'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Flight $flight)
     {
-        $data = $request->validate([
-            'flight_id' => 'required|exists:flights,id',
-        ]);
-        
-        $flight = Flight::findOrFail($data['flight_id']);
+        // A validação de 'flight_id' do request não é mais necessária
+        // pois o route model binding já garante que o $flight existe.
 
         Reservation::create([
             'user_id' => auth()->id(),
@@ -84,27 +81,29 @@ class ReservationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Reservation $reservation)
     {
-        $reservation = Reservation::with(['user', 'flight'])->findOrFail($id);
+        $this->authorize('view', $reservation);
+        $reservation->load(['user', 'flight']);
         return view('reservations.show', compact('reservation'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(Reservation $reservation)
     {
-        $reservation = Reservation::with(['user', 'flight'])->findOrFail($id);
+        $this->authorize('update', $reservation);
+        $reservation->load(['user', 'flight']);
         return view('reservations.edit', compact('reservation'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Reservation $reservation)
     {
-        $reservation = Reservation::findOrFail($id);
+        $this->authorize('update', $reservation);
         $data = $request->validate([
             'status' => 'required|in:pending,confirmed,cancelled',
         ]);
@@ -115,9 +114,9 @@ class ReservationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Reservation $reservation)
     {
-        $reservation = Reservation::findOrFail($id);
+        $this->authorize('delete', $reservation);
         $reservation->delete();
         return redirect()->route('reservations.index');
     }
