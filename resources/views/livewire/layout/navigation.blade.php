@@ -39,9 +39,14 @@ new class extends Component
                     <x-nav-link :href="route('reservations.index')" :active="request()->routeIs('reservations.*')" wire:navigate>
                         {{ __('Reservas') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('admin.reports')" :active="request()->routeIs('admin.reports')" wire:navigate>
-                        {{ __('Relatórios') }}
-                    </x-nav-link>
+                    @role('admin')
+                        <x-nav-link :href="route('admin.reports')" :active="request()->routeIs('admin.reports')" wire:navigate>
+                            {{ __('Relatórios') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.users')" :active="request()->routeIs('admin.users')" wire:navigate>
+                            {{ __('Usuários') }}
+                        </x-nav-link>
+                    @endrole
                 </div>
 
                 
@@ -95,6 +100,20 @@ new class extends Component
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('flights.index')" :active="request()->routeIs('flights.*')" wire:navigate>
+                {{ __('Voos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('reservations.index')" :active="request()->routeIs('reservations.*')" wire:navigate>
+                {{ __('Reservas') }}
+            </x-responsive-nav-link>
+            @role('admin')
+                <x-responsive-nav-link :href="route('admin.reports')" :active="request()->routeIs('admin.reports')" wire:navigate>
+                    {{ __('Relatórios') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.users')" :active="request()->routeIs('admin.users')" wire:navigate>
+                    {{ __('Usuários') }}
+                </x-responsive-nav-link>
+            @endrole
         </div>
 
         <!-- Responsive Settings Options -->
