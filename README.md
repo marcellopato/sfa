@@ -1,65 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SFA - Air Charter Service
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este é um projeto de demonstração de um sistema de fretamento de voos (Air Charter Service), construído com PHP/Laravel.
 
-## About Laravel
+O sistema possui um painel administrativo para gerenciamento de voos e reservas, controle de acesso baseado em papéis (Admin, User) e uma API RESTful completa com autenticação JWT e documentação Swagger.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Repositório
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Você pode clonar este projeto a partir do seguinte repositório no GitHub:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```bash
+git clone https://github.com/marcellopato/sfa.git
+```
 
-## Learning Laravel
+## Requisitos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Para executar este projeto, você precisará ter as seguintes ferramentas instaladas em seu ambiente de desenvolvimento:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Docker e Docker Compose:** Para executar o ambiente de desenvolvimento conteinerizado com Laravel Sail.
+- **Composer:** Para gerenciamento de dependências do PHP.
+- **PHP 8.2+**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Como Executar o Projeto
 
-## Laravel Sponsors
+Siga os passos abaixo para configurar e executar o ambiente de desenvolvimento localmente.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1.  **Clonar o Repositório**
+    ```bash
+    git clone https://github.com/marcellopato/sfa.git
+    cd sfa
+    ```
 
-### Premium Partners
+2.  **Copiar o Arquivo de Ambiente**
+    Copie o arquivo de exemplo `.env.example` para `.env`. Ele contém as configurações padrão necessárias para o Laravel e o Sail.
+    ```bash
+    cp .env.example .env
+    ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+3.  **Instalar Dependências do Composer**
+    Este comando irá instalar todas as dependências do PHP definidas no `composer.json`.
+    ```bash
+    composer install
+    ```
 
-## Contributing
+4.  **Iniciar os Contêineres com Laravel Sail**
+    Execute o Sail em modo "detached" (background). Este comando irá construir e iniciar os contêineres Docker para a aplicação, banco de dados e outros serviços.
+    ```bash
+    ./vendor/bin/sail up -d
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5.  **Gerar a Chave da Aplicação**
+    Com os contêineres em execução, gere a chave de encriptação do Laravel.
+    ```bash
+    ./vendor/bin/sail artisan key:generate
+    ```
 
-## Code of Conduct
+6.  **Executar as Migrações e Seeders**
+    Este comando irá criar a estrutura do banco de dados e popular as tabelas com dados iniciais, incluindo os papéis (admin, user) e usuários de exemplo.
+    ```bash
+    ./vendor/bin/sail artisan migrate --seed
+    ```
+    
+    **Usuários de Exemplo:**
+    - **Admin:** `admin@sfa.com` / `password`
+    - **Usuário Comum:** `user@sfa.com` / `password`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Acesso à API e Documentação
 
-## Security Vulnerabilities
+A API do projeto é documentada utilizando Swagger (OpenAPI). Para acessar a documentação e interagir com os endpoints, siga os passos abaixo.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1.  **Gerar a Documentação da API**
+    Execute o seguinte comando para gerar o arquivo de documentação do Swagger:
+    ```bash
+    ./vendor/bin/sail artisan l5-swagger:generate
+    ```
+
+2.  **Acessar a Interface do Swagger**
+    Abra o seu navegador e acesse a seguinte URL:
+    [http://localhost/api/documentation](http://localhost/api/documentation)
+
+3.  **Autenticar na API**
+    Para testar os endpoints protegidos, você precisa se autenticar:
+    - Encontre o endpoint `POST /api/auth/login`.
+    - Use as credenciais do usuário admin (`admin@sfa.com` / `password`) para obter um token de acesso.
+    - Copie o `access_token` retornado.
+    - Clique no botão "Authorize" no topo da página.
+    - Na janela que abrir, cole o token no formato `Bearer <seu_token_aqui>`.
+    - Agora você pode testar todos os endpoints protegidos da API.
+
 
 ## License
 
