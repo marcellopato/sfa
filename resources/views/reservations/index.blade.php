@@ -25,9 +25,9 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Código</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Voo</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Passageiros</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Data da Reserva</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Preço Total</th>
                         <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Usuário</th>
@@ -37,9 +37,9 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach($reservations as $reservation)
                         <tr>
-                            <td class="px-4 py-2">{{ $reservation->id }}</td>
+                            <td class="px-4 py-2 font-mono text-sm">{{ $reservation->reservation_code }}</td>
                             <td class="px-4 py-2">{{ $reservation->flight->code ?? '-' }}</td>
-                            <td class="px-4 py-2">{{ $reservation->passengers }}</td>
+                            <td class="px-4 py-2">{{ $reservation->reservation_date->format('d/m/Y H:i') }}</td>
                             <td class="px-4 py-2">
                                 @php
                                     $statusColors = [

@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Reservation;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
+
+class ReservationPolicy
+{
+    /**
+     * Perform pre-authorization checks.
+     *
+     * @param  \App\Models\User  $user
+     * @return void|bool
+     */
+    public function before(User $user)
+    {
+        if ($user->hasRole('admin')) {
+            return true;
+        }
+    }
+
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user): bool
+    {
+        return true;
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, Reservation $reservation): bool
+    {
+        return $user->id === $reservation->user_id;
+    }
+
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user): bool
+    {
+        // A lógica de criação é livre para qualquer usuário logado,
+        // controlada diretamente no controller.
+        return true;
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Reservation $reservation): bool
+    {
+        // Apenas admins podem atualizar, tratado pelo método before()
+        return false;
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Reservation $reservation): bool
+    {
+        // Apenas admins podem deletar, tratado pelo método before()
+        return false;
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     */
+    public function restore(User $user, Reservation $reservation): bool
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the model.
+     */
+    public function forceDelete(User $user, Reservation $reservation): bool
+    {
+        return false;
+    }
+}
